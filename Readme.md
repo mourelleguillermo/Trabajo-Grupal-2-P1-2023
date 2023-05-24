@@ -1,4 +1,7 @@
-<h1> Batalla Naval (Un jugador) </h1>
-<h2> Manual de usuario </h2>
+<h3> Segundo trabajo grupal de Programación 1 en UCU </h3>
 
-TODO fill out
+El siguiente trabajo grupal está basado en el juego de la batalla naval. Este es
+un juego tradicional de estrategia y algo de suerte, que involucra a dos
+participantes.
+El proyecto no consiste en la implementación del juego original, sino en una
+simplificación, con algunas consideraciones.
