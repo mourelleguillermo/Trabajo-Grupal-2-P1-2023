@@ -4,12 +4,14 @@ from math import ceil
 tablero = []
 filaAbajo = ''
 listatablero = ['3', '4', '5', '6', '7', '8', '9', '10']
-a=0
-while a==0:
-    tamanioDelTablero=input("ingrese el tamaño del tablero: ")
+
+# Determinar tamaño del tablero
+tamañoElegido = False
+while tamañoElegido == False:
+    tamanioDelTablero = input("Ingrese el tamaño del tablero (Entre 3 y 10): ")
     if tamanioDelTablero in listatablero:
         tamanioDelTablero = int(tamanioDelTablero)
-        a=+1
+        tamañoElegido = True
     else:
         print("Valor no valido")
 
@@ -27,10 +29,11 @@ def mostrar_tablero(tablero):
         print(" ".join(fila) + ' ' +str(t))
         t += 1
     print(filaAbajo)
+    print()
 
 # Función para colocar los barcos en posiciones aleatorias
 def colocar_barcos(tablero, num_barcos):
-    Lista=[]
+    Lista = []
     for _ in range(num_barcos):
         fila = random.randint(0, len(tablero) - 1)
         columna = random.randint(0, len(tablero[0]) - 1)
@@ -43,24 +46,22 @@ def colocar_barcos(tablero, num_barcos):
 
 def dificultad(tablerototal):
     print("Elija la dificultad")
-    CantidadTurnos=0
-    q=0
-    while q!=1:
+    CantidadTurnos = 0
+    difiElegida = False
+    while difiElegida == False:
         Difi=input("Ingrese 1 para facil, 2 para normal y 3 para dificil: ")
-        if Difi=='1':
+        if Difi == '1': # Dificultad Fácil
             CantidadTurnos=tablerototal*0.7
-            q=q+1
-        elif Difi=='2':
+            difiElegida = True
+        elif Difi == '2': # Dificultad Intermedia
             CantidadTurnos=tablerototal*0.5
-            q=q+1
-        elif Difi=='3':
+            difiElegida = True
+        elif Difi == '3': # Dificultad Difícil
             CantidadTurnos=tablerototal*0.3
-            q=q+1
+            difiElegida = True
         else:
             print("No valido")
     return CantidadTurnos
-
-
 
 
 # Iniciar el juego
@@ -69,27 +70,32 @@ mostrar_tablero(tablero)
 
 # Colocar barcos en el tablero
 tablerototal=tamanioDelTablero*tamanioDelTablero
-n=0
+n = False
 listabarcos = []
 tamanioDelTableroOtro = int(tamanioDelTablero)
-while n==0:
+while n == False:
     CantidadBarcos = input("Ingrese la cantidad de barcos: ")
     while tamanioDelTableroOtro != 0:
         listabarcos.append(str(tamanioDelTableroOtro))
-        tamanioDelTableroOtro = tamanioDelTableroOtro - 1
+        tamanioDelTableroOtro -= 1
     if CantidadBarcos in listabarcos:
         colocar_barcos(tablero, int(CantidadBarcos))
-        n=+1
+        n = True
         CantidadBarcos = int(CantidadBarcos)
     else:
         print("Ese valor no es valido")
 
-CantidadTurno=ceil(dificultad(tablerototal))
+CantidadTurno = ceil(dificultad(tablerototal))
 CantidadTurno = int(CantidadTurno)
 
 ListaFilaColumna=colocar_barcos(tablero, CantidadBarcos)
 
 # Jugar
+
+barcosHundidos = 0
+disparos = 0
+listaDisparos = []
+
 for turno in range(CantidadTurno):
     print("Turno", turno + 1)
     listaFilascolumnas=[]
@@ -104,15 +110,22 @@ for turno in range(CantidadTurno):
                 adivina_fila_int=int(adivina_fila)
                 adivina_columna_int=int(adivina_columna)
                 AfilaAcolumna=adivina_fila+adivina_columna
+                disparoHecho = adivina_fila + adivina_columna
+                listaDisparos.append(disparoHecho)
                 w=w+1
             else:
                 print("Columna no valida")
         else:
             print("Fila no valida")
 
+    espacioAdivinado = adivina_fila + adivina_columna
+
     if AfilaAcolumna in ListaFilaColumna:
         print("¡Felicitaciones! ¡Hundiste un barco!")
         tablero[adivina_fila_int][adivina_columna_int] = "X"
+        barcosHundidos += 1
+        disparos += 1
+        ListaFilaColumna.remove(espacioAdivinado)
     else:
         if adivina_fila_int < 0 or adivina_fila_int > (tamanioDelTablero-1) or \
            adivina_columna_int < 0 or adivina_columna_int > (tamanioDelTablero-1):
@@ -121,18 +134,32 @@ for turno in range(CantidadTurno):
         elif tablero[adivina_fila_int][adivina_columna_int] == "X":
             print("Ya has adivinado esa posición.")
             turno=turno-1
+            disparos += 1
         elif tablero[adivina_fila_int][adivina_columna_int] == "O":
             print("Ya has dado a esa posición.")
             turno=turno-1
+            disparos += 1
         elif adivina_fila_int > 0 or adivina_fila_int < (tamanioDelTablero-1) or \
             adivina_columna_int > 0 or adivina_columna_int < (tamanioDelTablero-1):
             print("¡Oops! ¡No has dado en el blanco!")
             tablero[adivina_fila_int][adivina_columna_int] = "O"
+            disparos += 1
         else:
             print("Oops, esa posición no es válida.")
             turno=turno-1
         
 
-    mostrar_tablero(tablero)
+    if ListaFilaColumna == []:
+        break
 
-print("\n¡Fin del juego! \n▀▀▀▄░▄▄░░▄▀▀▄▄▄░░░░ \n▄▀▀▄█▄░▀░▄▀▄█▄░▀▄░░ \n░░░░█░▀░▀░░ █░▀▄░░░░ \n░░░▐▌░░░░░░▐▌░░░░██ \n██████▄▄▄██████▄███")
+    mostrar_tablero(tablero)
+    
+print()
+if ListaFilaColumna == []:
+    print('Felicidades! Has ganado!')
+else:
+    print('Qué lastima, te han faltado barcos...')
+print(f'Has hundido {barcosHundidos} barcos, en {disparos} disparos.')
+print(f'Tus disparos fueron: {listaDisparos}')
+
+print("\n¡Fin del juego!\n \n▀▀▀▄░▄▄░░▄▀▀▄▄▄░░░░ \n▄▀▀▄█▄░▀░▄▀▄█▄░▀▄░░ \n░░░░█░▀░▀░░ █░▀▄░░░░ \n░░░▐▌░░░░░░▐▌░░░░██ \n██████▄▄▄██████▄███")
