@@ -150,7 +150,7 @@ for turno in range(CantidadTurno):
         
 
     if ListaFilaColumna == []:
-        break
+        break                    # Finaliza el juego aunque queden turnos
 
     mostrar_tablero(tablero)
     
