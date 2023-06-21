@@ -111,7 +111,8 @@ for turno in range(CantidadTurno):
                 adivina_columna_int=int(adivina_columna)
                 AfilaAcolumna=adivina_fila+adivina_columna
                 disparoHecho = adivina_fila + adivina_columna
-                listaDisparos.append(disparoHecho)
+                if disparoHecho not in listaDisparos:
+                    listaDisparos.append(disparoHecho)
                 w=w+1
             else:
                 print("Columna no valida")
